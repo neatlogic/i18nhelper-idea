@@ -1,18 +1,25 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
-    <id>com.github.zenkiray.i18nhelper</id>
-    <name>i18nhelper Template</name>
-    <vendor>zenkiray</vendor>
-
+    <id>com.neatlogic.i18nhelper</id>
+    <name>i18nhelper</name>
+    <vendor>neatlogic</vendor>
     <depends>com.intellij.modules.platform</depends>
 
     <resource-bundle>messages.MyBundle</resource-bundle>
-
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.zenkiray.i18nhelper.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
+        <projectService serviceImplementation="com.neatlogic.I18nhelperSetting"/>
+        <projectConfigurable instance="com.neatlogic.I18nhelperConfigurable"/>
     </extensions>
-
-    <applicationListeners>
-        <listener class="com.github.zenkiray.i18nhelper.listeners.MyFrameStateListener" topic="com.intellij.ide.FrameStateListener"/>
-    </applicationListeners>
+    <actions>
+        <!--<action id="i18nhelper:replace" class="com.neatlogic.I18nhelper" text="替换i18n键值">
+            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="meta T"/>
+        </action>-->
+        <action id="i18nhelper:replace" class="com.neatlogic.I18nReplacer" text="替换i18n键值">
+            <add-to-group group-id="EditorActions" anchor="first"/>
+        </action>
+        <!-- <action id="i18nhelper:config" class="com.neatlogic.I18nhelperSetting" text="配置i18nhelper">
+             <add-to-group group-id="EditMenu" anchor="first"/>
+         </action>-->
+    </actions>
 </idea-plugin>
