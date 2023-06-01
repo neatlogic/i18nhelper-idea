@@ -1,10 +1,11 @@
 [中文](README.md) / English
 
-<p align="left">
+<p>
     <a href="https://opensource.org/license/gpl-3.0/" alt="License">
         <img src="https://img.shields.io/badge/License-GPL--3.0-green" /></a>
 <a target="_blank" href="https://join.slack.com/t/neatlogichome/shared_invite/zt-1w037axf8-r_i2y4pPQ1Z8FxOkAbb64w">
 <img src="https://img.shields.io/badge/Slack-Neatlogic-orange" /></a>
+<a target="_blank" href="https://plugins.jetbrains.com/plugin/21921-i18nhelper"><img alt="JetBrains plugins" src="https://img.shields.io/jetbrains/plugin/d/21921"></a>
 </p>
 
 ---
