@@ -4,22 +4,20 @@
     <name>i18nhelper</name>
     <vendor>neatlogic</vendor>
     <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.java</depends>
 
     <resource-bundle>messages.MyBundle</resource-bundle>
     <extensions defaultExtensionNs="com.intellij">
         <projectService serviceImplementation="com.neatlogic.I18nhelperSetting"/>
         <projectConfigurable instance="com.neatlogic.I18nhelperConfigurable"/>
+        <codeInsight.inlayProvider language="JAVA" implementationClass="com.neatlogic.I18nInlayHintsProvider"/>
     </extensions>
     <actions>
-        <!--<action id="i18nhelper:replace" class="com.neatlogic.I18nhelper" text="替换i18n键值">
-            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
-            <keyboard-shortcut keymap="$default" first-keystroke="meta T"/>
-        </action>-->
         <action id="i18nhelper:replace" class="com.neatlogic.I18nReplacer" text="替换i18n键值">
             <add-to-group group-id="EditorActions" anchor="first"/>
         </action>
-        <!-- <action id="i18nhelper:config" class="com.neatlogic.I18nhelperSetting" text="配置i18nhelper">
-             <add-to-group group-id="EditMenu" anchor="first"/>
-         </action>-->
     </actions>
+    <extensions defaultExtensionNs="com.intellij">
+        <annotator language="JAVA" implementationClass="com.neatlogic.I18nAnnotator"/>
+    </extensions>
 </idea-plugin>

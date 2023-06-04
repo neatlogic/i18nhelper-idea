@@ -8,6 +8,7 @@ import com.intellij.openapi.components.*;
 @State(name = "I18nhelperSetting", storages = @Storage("I18nhelperSetting.xml"))
 public class I18nhelperSetting implements PersistentStateComponent<I18nhelperSetting> {
     public String json = "";
+    public String currentLang;
 
     @Override
     public I18nhelperSetting getState() {

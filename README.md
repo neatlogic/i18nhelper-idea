@@ -13,12 +13,11 @@
 ## 功能
 
 <!-- Plugin description -->
-自动转换选中文本为i18n中的key，如果中文不存在，则自动往对应的i18n配置文件中写入key和文本内容，并完成目标语言翻译。
-
----
-
 Automatically convert selected text to a key in i18n. If the Chinese text does not exist, it will automatically write
 the key and text content into the corresponding i18n configuration file, and complete the target language translation.
+
+---
+自动转换选中文本为i18n中的key，如果中文不存在，则自动往对应的i18n配置文件中写入key和文本内容，并完成目标语言翻译。
 
 <!-- Plugin description end -->
 

@@ -6,7 +6,6 @@ import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.SelectionModel;
@@ -25,10 +24,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class I18nReplacer extends AnAction {
@@ -36,26 +35,10 @@ public class I18nReplacer extends AnAction {
     @Override
     public void actionPerformed(AnActionEvent e) {
         Project project = e.getProject();
-        Gson gson = new Gson();
-        JsonObject setting = new JsonObject();
-        String basePath = null;
-        if (project != null) {
-            basePath = project.getBasePath();
-            I18nhelperSetting settings = ServiceManager.getService(project, I18nhelperSetting.class);
-            String json = settings.json;
-            if (StringUtils.isNotBlank(json)) {
-                try {
-                    setting = gson.fromJson(json, JsonObject.class);
-                } catch (Exception ignored) {
-                    Messages.showErrorDialog("Configuration content does not comply with JSON format.", "Fatal Error");
-                }
-            } else {
-                Messages.showInfoMessage("Configuration is Null", "Fatal Error");
-                return;
-            }
-        } else {
-            Messages.showInfoMessage("Project is Null", "Fatal Error");
+        if (project == null) {
+            return;
         }
+        I18nConfig i18nConfig = new I18nConfig(project);
         final Editor editor = e.getData(CommonDataKeys.EDITOR);
         String selectedText;
         int start, end;
@@ -69,19 +52,13 @@ public class I18nReplacer extends AnAction {
             Messages.showInfoMessage("Editor is Null", "Fatal Error");
             return;
         }
-        if (setting == null || setting.entrySet().isEmpty()) {
-            Messages.showInfoMessage("Configuration is Null", "Fatal Error");
-        }
         if (StringUtils.isNotBlank(selectedText)) {
-            String path = setting.get("path").getAsString();
+            String path = i18nConfig.getPath();
             if (StringUtils.isNotBlank(path)) {
-                String absolutePath = StringUtils.isNotBlank(basePath) ? Paths.get(basePath, path).toString() : path;
-                VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByPath(absolutePath);
-
+                VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByPath(path);
                 if (virtualFile != null && virtualFile.exists()) {
                     try {
-                        String fileContent = StreamUtil.readText(virtualFile.getInputStream(), StandardCharsets.UTF_8);
-                        JsonObject languagePack = gson.fromJson(fileContent, JsonObject.class);
+                        JsonObject languagePack = i18nConfig.getLangPack();
                         String key = findKeyByValue(languagePack, selectedText, "");
                         if (StringUtils.isNotBlank(key)) {
                             // 执行一个写入命令，替换选中的文本
@@ -107,7 +84,7 @@ public class I18nReplacer extends AnAction {
                                         Document document = editor.getDocument();
                                         document.replaceString(start, end, newKey);
                                     });
-                                    translate(selectedText, newKey, setting, e);
+                                    translate(selectedText, newKey, e);
                                 } catch (IllegalArgumentException ex) {
                                     Messages.showInfoMessage(project, ex.getMessage(), "");
                                 } catch (NoSuchAlgorithmException ex) {
@@ -122,11 +99,11 @@ public class I18nReplacer extends AnAction {
                         // 处理异常...
                     }
                 } else {
-                    Messages.showInfoMessage("i18n file:" + absolutePath + "is not exists.", "Fatal Error");
+                    Messages.showInfoMessage("i18n file:" + path + "is not exists.", "Fatal Error");
                 }
+            } else {
+                Messages.showInfoMessage("Please set path param.", "Fatal Error");
             }
-
-
         }
     }
 
@@ -183,37 +160,24 @@ public class I18nReplacer extends AnAction {
         return jsonObject;
     }
 
-    /*
-   "path":"",
-   "path_en":"",
-   "translate": {
- "source": "zh",
- "target": ["en"],
- "appid": "20230322001610272",
- "secret": "qUV8AOOK_CLU3hlb1YXa"
-}
-    */
-    private static void translate(String content, String newKey, JsonObject setting, AnActionEvent e) throws IOException, NoSuchAlgorithmException {
-        JsonObject translateObj = setting.getAsJsonObject("translate");
+    private static void translate(String content, String newKey, AnActionEvent e) throws IOException, NoSuchAlgorithmException {
         Project project = e.getProject();
-        if (project != null && translateObj != null && !translateObj.entrySet().isEmpty()) {
-            String basePath = project.getBasePath();
-            String source = translateObj.get("source") != null ? translateObj.get("source").getAsString() : "";
-            JsonArray targetList = translateObj.getAsJsonArray("target");
-            String appId = translateObj.get("appid") != null ? translateObj.get("appid").getAsString() : "";
-            String secret = translateObj.get("secret") != null ? translateObj.get("secret").getAsString() : "";
+        if (project != null) {
+            I18nConfig i18nConfig = new I18nConfig(project);
+            String appId = i18nConfig.getAppId();
+            String secret = i18nConfig.getSecret();
+            String source = i18nConfig.getSource();
+            List<String> targetList = i18nConfig.getTargetList();
             if (StringUtils.isNotBlank(source) && StringUtils.isNotBlank(appId) && StringUtils.isNotBlank(secret) && targetList != null && targetList.size() > 0) {
                 // 创建 URL 对象
                 String urlString = "http://api.fanyi.baidu.com/api/trans/vip/translate";
-                for (int i = 0; i < targetList.size(); i++) {
-                    String target = targetList.get(i).getAsString();
-                    String path = setting.get("path_" + target.toLowerCase()) != null ? setting.get("path_" + target.toLowerCase()).getAsString() : null;
+                for (String target : targetList) {
+                    String path = i18nConfig.getPath(target);
                     if (StringUtils.isBlank(path)) {
                         continue;
                     }
-                    String absolutePath = StringUtils.isNotBlank(basePath) ? Paths.get(basePath, path).toString() : path;
-                    VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByPath(absolutePath);
-                    if (!virtualFile.exists()) {
+                    VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByPath(path);
+                    if (virtualFile == null || !virtualFile.exists()) {
                         continue;
                     }
                     int salt = 123456;
@@ -267,8 +231,7 @@ public class I18nReplacer extends AnAction {
                             if (resultList != null && resultList.size() > 0) {
                                 translatedText = resultList.get(0).getAsJsonObject().get("dst").getAsString();
                                 if (StringUtils.isNotBlank(translatedText)) {
-                                    String fileContent = StreamUtil.readText(virtualFile.getInputStream(), StandardCharsets.UTF_8);
-                                    JsonObject languagePack = gson.fromJson(fileContent, JsonObject.class);
+                                    JsonObject languagePack = i18nConfig.getLangPack(target);
                                     JsonObject newLanguagePack = addCompoundKey(languagePack, newKey, translatedText);
                                     Document jsonDocument = FileDocumentManager.getInstance().getDocument(virtualFile);
                                     if (jsonDocument == null) {
