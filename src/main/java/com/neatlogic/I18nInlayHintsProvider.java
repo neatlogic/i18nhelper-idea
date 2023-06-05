@@ -1,18 +1,13 @@
 package com.neatlogic;
 
 import com.intellij.codeInsight.hints.*;
-import com.intellij.codeInsight.hints.presentation.InlayPresentation;
-import com.intellij.codeInsight.hints.presentation.InlayTextMetricsStorage;
 import com.intellij.codeInsight.hints.presentation.PresentationFactory;
-import com.intellij.codeInsight.hints.presentation.TextInlayPresentation;
 import com.intellij.lang.Language;
 import com.intellij.lang.java.JavaLanguage;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiLiteralExpression;
-import com.intellij.psi.PsiMethodCallExpression;
-import com.intellij.psi.impl.source.tree.java.PsiReferenceExpressionImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
@@ -38,13 +33,11 @@ public class I18nInlayHintsProvider implements InlayHintsProvider<NoSettings> {
         return "I18n hint";
     }
 
-    @Nullable
     @Override
     public String getPreviewText() {
         return null;
     }
 
-    @NotNull
     @Override
     public ImmediateConfigurable createConfigurable(@NotNull NoSettings noSettings) {
         return null;
@@ -80,7 +73,7 @@ public class I18nInlayHintsProvider implements InlayHintsProvider<NoSettings> {
                     try {
                         String result = Utils.findValueByKey(path, value);
                         if (StringUtils.isNotBlank(result)) {
-                            inlayHintsSink.addInlineElement(element.getTextRange().getEndOffset(), true, presentFactory.roundWithBackground(presentFactory.smallText(result)));
+                            inlayHintsSink.addInlineElement(element.getTextRange().getEndOffset(), true, presentFactory.roundWithBackground(presentFactory.text(result)));
                         }
                     } catch (Exception ex) {
 

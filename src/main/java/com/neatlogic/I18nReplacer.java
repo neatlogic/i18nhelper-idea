@@ -133,7 +133,7 @@ public class I18nReplacer extends AnAction {
                             String newKey = Messages.showInputDialog(project, "Please input new key, eg:common.name", "", Messages.getQuestionIcon(), defaultKey.toString(), new InputValidator() {
                                 @Override
                                 public boolean checkInput(String inputString) {
-                                    return inputString.matches("^[a-z]+(\\.[a-z]+)+$");
+                                    return inputString.matches("^[a-z_]+(\\.[a-z_]+)+$");
                                 }
 
                                 @Override
