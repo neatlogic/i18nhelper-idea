@@ -1,20 +1,22 @@
 package com.neatlogic;
 
 import com.google.gson.*;
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.actionSystem.CommonDataKeys;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.command.WriteCommandAction;
+import com.intellij.openapi.editor.CaretModel;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.InputValidator;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.psi.*;
+import com.intellij.psi.util.PsiTreeUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.BufferedReader;
@@ -26,6 +28,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,7 +70,77 @@ public class I18nReplacer extends AnAction {
                                 document.replaceString(start, end, key);
                             });
                         } else {
-                            String newKey = Messages.showInputDialog(project, "Please input new key, eg:common.name", "", Messages.getQuestionIcon());
+                            StringBuilder defaultKey = new StringBuilder();
+                            PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+                            if (psiFile != null) {
+                                CaretModel caretModel = editor.getCaretModel();
+                                int offset = caretModel.getOffset();
+                                PsiElement element = psiFile.findElementAt(offset);
+                                PsiClass psiClass = PsiTreeUtil.getParentOfType(element, PsiClass.class);
+                                PsiMethod psiMethod = PsiTreeUtil.getParentOfType(element, PsiMethod.class);
+                                PsiAnnotationParameterList psiAnnotationParameterList = PsiTreeUtil.getParentOfType(element, PsiAnnotationParameterList.class);
+                                PsiAnnotation psiAnnotation = PsiTreeUtil.getParentOfType(element, PsiAnnotation.class);
+                                if (psiClass != null) {
+                                    String className = psiClass.getQualifiedName();
+                                    if (className != null) {
+                                        String[] cns = className.split("\\.");
+                                        for (int i = 0; i < cns.length - 1; i++) {
+                                            defaultKey.append(cns[i].substring(0, 1).toLowerCase());
+                                        }
+                                        defaultKey.append(".").append(cns[cns.length - 1].toLowerCase());
+                                    }
+                                }
+                                //如果有annotation就忽略方法
+                                if (psiAnnotation == null) {
+                                    if (psiMethod != null) {
+                                        String methodName = psiMethod.getName();
+                                        defaultKey.append(".").append(methodName.toLowerCase());
+                                    }
+                                }
+
+                                String annotationName = "";
+                                while (psiAnnotation != null) {
+                                    String an = psiAnnotation.getQualifiedName();
+                                    if (StringUtils.isNotBlank(an)) {
+                                        if (StringUtils.isNotBlank(annotationName)) {
+                                            annotationName = "." + annotationName;
+                                        }
+
+                                        an = an.substring(an.lastIndexOf(".") + 1);
+                                        annotationName = an.toLowerCase() + annotationName;
+                                        PsiAnnotation parentAnnotation = PsiTreeUtil.getParentOfType(psiAnnotation, PsiAnnotation.class);
+                                        if (parentAnnotation == null) {
+                                            break;
+                                        }
+                                        psiAnnotation = parentAnnotation;
+                                    } else {
+                                        break;
+                                    }
+                                }
+                                if (psiAnnotationParameterList != null && psiAnnotation != null) {
+                                    for (PsiNameValuePair pair : psiAnnotationParameterList.getAttributes()) {
+                                        if (pair.getTextRange().contains(offset)) {
+                                            String parameterName = pair.getName();
+                                            annotationName = annotationName + "." + parameterName;
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (StringUtils.isNotBlank(annotationName)) {
+                                    defaultKey.append(".").append(annotationName);
+                                }
+                            }
+                            String newKey = Messages.showInputDialog(project, "Please input new key, eg:common.name", "", Messages.getQuestionIcon(), defaultKey.toString(), new InputValidator() {
+                                @Override
+                                public boolean checkInput(String inputString) {
+                                    return inputString.matches("^[a-z]+(\\.[a-z]+)+$");
+                                }
+
+                                @Override
+                                public boolean canClose(String inputString) {
+                                    return this.checkInput(inputString);
+                                }
+                            });
                             if (StringUtils.isNotBlank(newKey)) {
                                 try {
                                     JsonObject newLanguagePack = addCompoundKey(languagePack, newKey, selectedText);
