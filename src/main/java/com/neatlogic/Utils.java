@@ -1,6 +1,7 @@
 package com.neatlogic;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.intellij.openapi.util.io.StreamUtil;
 import com.intellij.openapi.vfs.LocalFileSystem;
@@ -8,6 +9,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class Utils {
     public static String findValueByKey(String filePath, String key) throws IOException {
@@ -34,5 +37,22 @@ public class Utils {
             return json.get(keys[keys.length - 1]).getAsString();
         }
         return null;
+    }
+
+    public static JsonObject sortJsonObject(JsonObject unsortedJsonObject) {
+        Map<String, JsonElement> sortedMap = new TreeMap<>();
+        for (Map.Entry<String, JsonElement> entry : unsortedJsonObject.entrySet()) {
+            if (entry.getValue().isJsonObject()) {
+                sortedMap.put(entry.getKey(), sortJsonObject(entry.getValue().getAsJsonObject()));
+            } else {
+                sortedMap.put(entry.getKey(), entry.getValue());
+            }
+        }
+
+        JsonObject sortedJsonObject = new JsonObject();
+        for (Map.Entry<String, JsonElement> entry : sortedMap.entrySet()) {
+            sortedJsonObject.add(entry.getKey(), entry.getValue());
+        }
+        return sortedJsonObject;
     }
 }

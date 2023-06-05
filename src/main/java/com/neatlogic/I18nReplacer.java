@@ -149,9 +149,9 @@ public class I18nReplacer extends AnAction {
                                         return;
                                     }
                                     Gson outputGson = new GsonBuilder().setPrettyPrinting().create();
-                                    ApplicationManager.getApplication().runWriteAction(() -> jsonDocument.setText(outputGson.toJson(newLanguagePack)));
+                                    //写入前先排序，尽量避免冲突
+                                    ApplicationManager.getApplication().runWriteAction(() -> jsonDocument.setText(outputGson.toJson(Utils.sortJsonObject(newLanguagePack))));
 
-                                    // 必要时保存更改
                                     FileDocumentManager.getInstance().saveDocument(jsonDocument);
                                     WriteCommandAction.runWriteCommandAction(project, () -> {
                                         Document document = editor.getDocument();
@@ -311,7 +311,7 @@ public class I18nReplacer extends AnAction {
                                         continue;
                                     }
                                     Gson outputGson = new GsonBuilder().setPrettyPrinting().create();
-                                    ApplicationManager.getApplication().runWriteAction(() -> jsonDocument.setText(outputGson.toJson(newLanguagePack)));
+                                    ApplicationManager.getApplication().runWriteAction(() -> jsonDocument.setText(outputGson.toJson(Utils.sortJsonObject(newLanguagePack))));
                                     FileDocumentManager.getInstance().saveDocument(jsonDocument);
                                 }
                             }
