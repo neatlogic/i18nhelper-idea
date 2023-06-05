@@ -1,3 +1,4 @@
+<!-- Plugin description -->
 中文 / [English](README.en.md)
 
 <p>
@@ -12,14 +13,11 @@
 
 ## 功能
 
-<!-- Plugin description -->
 Automatically convert selected text to a key in i18n. If the Chinese text does not exist, it will automatically write
 the key and text content into the corresponding i18n configuration file, and complete the target language translation.
 
 ---
 自动转换选中文本为i18n中的key，如果中文不存在，则自动往对应的i18n配置文件中写入key和文本内容，并完成目标语言翻译。
-
-<!-- Plugin description end -->
 
 ## 使用要求
 
@@ -48,3 +46,6 @@ language_zh.json:
 
 在编辑器中选中任意文本，使用快捷键即可完成替换，如果key不存在，需要输入新的key
 ![img.png](IMAGES/img3.png)
+
+
+<!-- Plugin description end -->

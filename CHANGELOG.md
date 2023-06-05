@@ -1,6 +1,11 @@
 <!-- Keep a Changelog guide -> https://keepachangelog.com -->
 
-## [1.1.0]
+## [Unreleased]
+
+### 新功能
+- 切换当前语言。
+
+## [1.1.1]
 
 ### 自动显示原文本和已翻译内容
 - 默认语言会以内联形式展示在键值的旁边。
