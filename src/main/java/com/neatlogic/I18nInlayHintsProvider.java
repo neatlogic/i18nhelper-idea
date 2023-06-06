@@ -55,6 +55,7 @@ public class I18nInlayHintsProvider implements InlayHintsProvider<NoSettings> {
         return new FactoryInlayHintsCollector(editor) {
             @Override
             public boolean collect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
+                System.out.println("create hint");
                 return processElement(psiElement, editor, inlayHintsSink, getFactory());
             }
         };

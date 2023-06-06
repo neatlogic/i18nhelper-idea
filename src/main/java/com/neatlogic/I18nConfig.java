@@ -40,6 +40,12 @@ public class I18nConfig {
         return settings.currentLang;
     }
 
+    public void setCurrentLang(String lang) {
+        I18nhelperSetting settings = project.getService(I18nhelperSetting.class);
+        settings.currentLang = lang;
+    }
+
+
     public String getSource() {
         JsonObject translateObj = setting.getAsJsonObject("translate");
         if (translateObj != null && !translateObj.entrySet().isEmpty()) {
@@ -119,7 +125,7 @@ public class I18nConfig {
 
 
     public String getPath(String lang) {
-        if (StringUtils.isBlank(lang)) {
+        if (StringUtils.isBlank(lang) || lang.equalsIgnoreCase(this.getSource())) {
             return this.getPath();
         } else {
             String basePath = project.getBasePath();

@@ -16,8 +16,12 @@
         <action id="i18nhelper:replace" class="com.neatlogic.I18nReplacer" text="替换i18n键值">
             <add-to-group group-id="EditorActions" anchor="first"/>
         </action>
+        <group id="i18nActionGroup" class="com.neatlogic.I18nCurrentLangActionGroup" text="选择当前语言"
+               icon="AllIcons.General.Web" popup="true" >
+            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+        </group>
     </actions>
-    <extensions defaultExtensionNs="com.intellij">
+    <!--<extensions defaultExtensionNs="com.intellij">
         <annotator language="JAVA" implementationClass="com.neatlogic.I18nAnnotator"/>
-    </extensions>
+    </extensions>-->
 </idea-plugin>

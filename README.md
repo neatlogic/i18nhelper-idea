@@ -1,6 +1,4 @@
 <!-- Plugin description -->
-中文 / [English](README.en.md)
-
 <p>
     <a href="https://opensource.org/license/gpl-3.0/" alt="License">
         <img src="https://img.shields.io/badge/License-GPL--3.0-green" /></a>
@@ -11,15 +9,30 @@
 
 ---
 
-## 功能
+## Features 功能
 
 Automatically convert selected text to a key in i18n. If the Chinese text does not exist, it will automatically write
 the key and text content into the corresponding i18n configuration file, and complete the target language translation.
 
 ---
+
+
 自动转换选中文本为i18n中的key，如果中文不存在，则自动往对应的i18n配置文件中写入key和文本内容，并完成目标语言翻译。
 
-## 使用要求
+## Requirements 使用要求
+
+This plugin requires that the i18n language file is in json format, for example:
+
+language_zh.json:
+``` json
+{
+    common:{
+        "name":"name",
+        "age":"age"
+    }
+}
+```
+---
 
 本插件要求i18n语言文件是json格式，例如
 
@@ -27,25 +40,33 @@ language_zh.json:
 
 ``` json
 {
-"name":"名称",
-"age":"年龄"
+    common:{
+        "name":"名称",
+        "age":"年龄"
+    }
 }
 ```
 
-## 使用方式
+## Usage 使用方式
 
-### 编辑语言文件路径
+### Edit the language file path 编辑语言文件路径
 
-![img.png](IMAGES/img.png)
+![img.png](https://github.com/neatlogic/i18nhelper-idea/raw/main/IMAGES/img.png)
 
-### 配置快捷键
+### Configure shortcut keys 配置快捷键
 
-![img_1.png](IMAGES/img_1.png)
+![img_1.png](https://github.com/neatlogic/i18nhelper-idea/raw/main/IMAGES/img_1.png)
 
-### 选中文本并替换
-
+### Select text and replace 选中文本并替换
+Select any text in the editor, use the shortcut key to complete the replacement. If the key does not exist, you need to
+input a new key.
+---
 在编辑器中选中任意文本，使用快捷键即可完成替换，如果key不存在，需要输入新的key
-![img.png](IMAGES/img3.png)
 
+![img.png](https://github.com/neatlogic/i18nhelper-idea/raw/main/IMAGES/img3.png)
+
+### Switch current language 切换当前语言
+
+![img.png](https://github.com/neatlogic/i18nhelper-idea/raw/main/IMAGES/img4.png)
 
 <!-- Plugin description end -->
