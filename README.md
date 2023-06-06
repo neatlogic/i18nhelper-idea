@@ -63,7 +63,9 @@ language_zh.json:
 
 Select any text in the editor, use the shortcut key to complete the replacement. If the key does not exist, you need to
 input a new key.
+
 ---
+
 在编辑器中选中任意文本，使用快捷键即可完成替换，如果key不存在，需要输入新的key
 
 ![img.png](https://github.com/neatlogic/i18nhelper-idea/raw/main/IMAGES/img3.png)
