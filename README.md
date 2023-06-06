@@ -24,14 +24,16 @@ the key and text content into the corresponding i18n configuration file, and com
 This plugin requires that the i18n language file is in json format, for example:
 
 language_zh.json:
+
 ``` json
 {
-    common:{
+    "common":{
         "name":"name",
         "age":"age"
     }
 }
 ```
+
 ---
 
 本插件要求i18n语言文件是json格式，例如
@@ -40,7 +42,7 @@ language_zh.json:
 
 ``` json
 {
-    common:{
+    "common":{
         "name":"名称",
         "age":"年龄"
     }
@@ -58,6 +60,7 @@ language_zh.json:
 ![img_1.png](https://github.com/neatlogic/i18nhelper-idea/raw/main/IMAGES/img_1.png)
 
 ### Select text and replace 选中文本并替换
+
 Select any text in the editor, use the shortcut key to complete the replacement. If the key does not exist, you need to
 input a new key.
 ---
