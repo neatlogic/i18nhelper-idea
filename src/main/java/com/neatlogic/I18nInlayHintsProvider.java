@@ -55,7 +55,6 @@ public class I18nInlayHintsProvider implements InlayHintsProvider<NoSettings> {
         return new FactoryInlayHintsCollector(editor) {
             @Override
             public boolean collect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
-                System.out.println("create hint");
                 return processElement(psiElement, editor, inlayHintsSink, getFactory());
             }
         };
@@ -63,7 +62,6 @@ public class I18nInlayHintsProvider implements InlayHintsProvider<NoSettings> {
 
     private boolean processElement(@NotNull PsiElement element, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink, PresentationFactory presentFactory) {
         // process the current element
-        //System.out.println(element);
         if (element instanceof PsiLiteralExpression) {
             if (((PsiLiteralExpression) element).getValue() instanceof String) {
                 //处理返回值是字符串

@@ -190,7 +190,7 @@ public class I18nReplacer extends AnAction {
                 }
             }
         } else if (element.isJsonPrimitive()) {
-            if (element.getAsJsonPrimitive().getAsString().equals(targetValue)) {
+            if (element.getAsJsonPrimitive().getAsString().equalsIgnoreCase(targetValue)) {
                 return currentPath;
             }
         }

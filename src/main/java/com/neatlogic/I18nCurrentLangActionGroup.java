@@ -21,7 +21,6 @@ public class I18nCurrentLangActionGroup extends ActionGroup {
                 List<String> targetList = config.getTargetList();
                 actionList = new ArrayList<>();
                 String source = config.getSource();
-                System.out.println("add action");
                 if (StringUtils.isNotBlank(source)) {
                     actionList.add(new I18nCurrentLangAction(source, source));
                 }
