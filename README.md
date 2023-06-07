@@ -1,4 +1,4 @@
-<!-- Plugin description -->
+
 <p>
     <a href="https://opensource.org/license/gpl-3.0/" alt="License">
         <img src="https://img.shields.io/badge/License-GPL--3.0-green" /></a>
@@ -8,7 +8,7 @@
 </p>
 
 ---
-
+<!-- Plugin description -->
 ## Features 功能
 
 Automatically convert selected text to a key in i18n. If the Chinese text does not exist, it will automatically write
