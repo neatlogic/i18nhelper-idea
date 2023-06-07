@@ -5,6 +5,7 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,7 @@ public class I18nCurrentLangActionGroup extends ActionGroup {
     private List<AnAction> actionList = new ArrayList<>();
 
     @Override
-    public AnAction[] getChildren(AnActionEvent e) {
+    public AnAction @NotNull [] getChildren(AnActionEvent e) {
         if (CollectionUtils.isEmpty(actionList)) {
             if (e != null && e.getProject() != null) {
                 I18nConfig config = I18nConfigFactory.getInstance(e.getProject());

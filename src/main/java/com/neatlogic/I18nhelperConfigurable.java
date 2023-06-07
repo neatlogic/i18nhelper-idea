@@ -4,11 +4,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.options.SearchableConfigurable;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.components.JBScrollPane;
 import org.jetbrains.annotations.Nls;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
@@ -26,7 +26,7 @@ public class I18nhelperConfigurable implements SearchableConfigurable {
     }
 
     @Override
-    public String getId() {
+    public @NotNull String getId() {
         return "i18nhelper";
     }
 
@@ -82,19 +82,19 @@ public class I18nhelperConfigurable implements SearchableConfigurable {
 
     @Override
     public boolean isModified() {
-        I18nhelperSetting settings = ServiceManager.getService(project, I18nhelperSetting.class);
+        I18nhelperSetting settings = project.getService(I18nhelperSetting.class);
         return !jsonTextArea.getText().equals(settings.json);
     }
 
     @Override
     public void apply() {
-        I18nhelperSetting settings = ServiceManager.getService(project, I18nhelperSetting.class);
+        I18nhelperSetting settings = project.getService(I18nhelperSetting.class);
         settings.json = jsonTextArea.getText();
     }
 
     @Override
     public void reset() {
-        I18nhelperSetting settings = ServiceManager.getService(project, I18nhelperSetting.class);
+        I18nhelperSetting settings = project.getService(I18nhelperSetting.class);
         jsonTextArea.setText(settings.json);
     }
 }

@@ -23,7 +23,7 @@ public class I18nInlayHintsProvider implements InlayHintsProvider<NoSettings> {
     @NotNull
     @Override
     public SettingsKey<NoSettings> getKey() {
-        return new SettingsKey<NoSettings>("i18nInlayHintsProvider");
+        return new SettingsKey<>("i18nInlayHintsProvider");
     }
 
     @Nls(capitalization = Nls.Capitalization.Sentence)

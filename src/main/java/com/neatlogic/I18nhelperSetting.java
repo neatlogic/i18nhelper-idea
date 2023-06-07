@@ -1,9 +1,8 @@
 package com.neatlogic;
 
-import com.intellij.openapi.actionSystem.AnAction;
-import com.intellij.openapi.actionSystem.AnActionEvent;
-
-import com.intellij.openapi.components.*;
+import com.intellij.openapi.components.PersistentStateComponent;
+import com.intellij.openapi.components.State;
+import com.intellij.openapi.components.Storage;
 
 @State(name = "I18nhelperSetting", storages = @Storage("I18nhelperSetting.xml"))
 public class I18nhelperSetting implements PersistentStateComponent<I18nhelperSetting> {
