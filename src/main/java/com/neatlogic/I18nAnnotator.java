@@ -35,31 +35,25 @@ public class I18nAnnotator implements Annotator {
                 List<String> targetList = config.getTargetList();
                 if (targetList != null && targetList.size() > 0) {
                     for (String target : targetList) {
-                        String path = config.getPath(target);
-                        if (StringUtils.isNotBlank(path)) {
-                            String newValue = Utils.findValueByKey(path, value);
-                            if (StringUtils.isNotBlank(newValue) && (elementCheckMap.get(element) == null || !elementCheckMap.get(element).contains(target))) {
-                                //目标语言
-                                holder.newAnnotation(HighlightSeverity.INFORMATION, target + ":" + newValue).range(element).create();
-                                elementCheckMap.computeIfAbsent(element, k -> new ArrayList<>());
-                                elementCheckMap.get(element).add(target);
-                            }
+                        String newValue = Utils.findValueByKey(config.getLangPack(target), value);
+                        if (StringUtils.isNotBlank(newValue) && (elementCheckMap.get(element) == null || !elementCheckMap.get(element).contains(target))) {
+                            //目标语言
+                            holder.newAnnotation(HighlightSeverity.INFORMATION, target + ":" + newValue).range(element).create();
+                            elementCheckMap.computeIfAbsent(element, k -> new ArrayList<>());
+                            elementCheckMap.get(element).add(target);
                         }
                     }
                 }
-                String path = config.getPath();
-                if (StringUtils.isNotBlank(path)) {
-                    String newValue = Utils.findValueByKey(path, value);
-                    if (StringUtils.isNotBlank(newValue) && (elementCheckMap.get(element) == null || !elementCheckMap.get(element).contains("default"))) {
-                        //源语言
-                        if (StringUtils.isNotBlank(config.getSource())) {
-                            newValue = config.getSource() + ":" + newValue;
-                        }
-                        elementCheckMap.computeIfAbsent(element, k -> new ArrayList<>());
-                        holder.newAnnotation(HighlightSeverity.INFORMATION, newValue).range(element).create();
-                        elementCheckMap.get(element).add("default");
-
+                String newValue = Utils.findValueByKey(config.getLangPack(), value);
+                if (StringUtils.isNotBlank(newValue) && (elementCheckMap.get(element) == null || !elementCheckMap.get(element).contains("default"))) {
+                    //源语言
+                    if (StringUtils.isNotBlank(config.getSource())) {
+                        newValue = config.getSource() + ":" + newValue;
                     }
+                    elementCheckMap.computeIfAbsent(element, k -> new ArrayList<>());
+                    holder.newAnnotation(HighlightSeverity.INFORMATION, newValue).range(element).create();
+                    elementCheckMap.get(element).add("default");
+
                 }
             }
         }

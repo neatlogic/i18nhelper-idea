@@ -41,7 +41,7 @@ public class I18nReplacer extends AnAction {
         if (project == null) {
             return;
         }
-        I18nConfig i18nConfig = new I18nConfig(project);
+        I18nConfig i18nConfig = I18nConfigFactory.getInstance(project);
         final Editor editor = e.getData(CommonDataKeys.EDITOR);
         String selectedText;
         int start, end;
@@ -236,7 +236,7 @@ public class I18nReplacer extends AnAction {
     private static void translate(String content, String newKey, AnActionEvent e) throws IOException, NoSuchAlgorithmException {
         Project project = e.getProject();
         if (project != null) {
-            I18nConfig i18nConfig = new I18nConfig(project);
+            I18nConfig i18nConfig = I18nConfigFactory.getInstance(project);
             String appId = i18nConfig.getAppId();
             String secret = i18nConfig.getSecret();
             String source = i18nConfig.getSource();

@@ -13,14 +13,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class Utils {
-    public static String findValueByKey(String filePath, String key) throws IOException {
-        VirtualFile virtualFile = LocalFileSystem.getInstance().findFileByPath(filePath);
-        if (virtualFile == null || !virtualFile.exists()) {
-            return "";
-        }
-        Gson gson = new Gson();
-        String fileContent = StreamUtil.readText(virtualFile.getInputStream(), StandardCharsets.UTF_8);
-        JsonObject json = gson.fromJson(fileContent, JsonObject.class);
+    public static String findValueByKey(JsonObject json, String key) throws IOException {
         String[] keys = key.split("\\.");
         for (int i = 0; i < keys.length - 1; i++) {
             String subKey = keys[i];

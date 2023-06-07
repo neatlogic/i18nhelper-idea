@@ -70,11 +70,11 @@ public class I18nInlayHintsProvider implements InlayHintsProvider<NoSettings> {
                 String path = config.getPath(config.getCurrentLang());
                 if (StringUtils.isNotBlank(path)) {
                     try {
-                        String result = Utils.findValueByKey(path, value);
+                        String result = Utils.findValueByKey(config.getLangPack(config.getCurrentLang()), value);
                         if (StringUtils.isNotBlank(result)) {
                             inlayHintsSink.addInlineElement(element.getTextRange().getEndOffset(), true, presentFactory.roundWithBackground(presentFactory.text(result)));
                         }
-                    } catch (Exception ex) {
+                    } catch (Exception ignored) {
 
                     }
                 }
