@@ -84,17 +84,25 @@ public class I18nReplacer extends AnAction {
                                     String className = psiClass.getQualifiedName();
                                     if (className != null) {
                                         String[] cns = className.split("\\.");
-                                        for (int i = 0; i < cns.length - 1; i++) {
-                                            defaultKey.append(cns[i].substring(0, 1).toLowerCase());
+                                        if (cns.length > 1) {
+                                            for (int i = 0; i < cns.length - 1; i++) {
+                                                defaultKey.append(cns[i].substring(0, 1).toLowerCase());
+                                            }
                                         }
-                                        defaultKey.append(".").append(cns[cns.length - 1].toLowerCase());
+                                        if (defaultKey.length() > 0) {
+                                            defaultKey.append(".");
+                                        }
+                                        defaultKey.append(cns[cns.length - 1].toLowerCase());
                                     }
                                 }
                                 //如果有annotation就忽略方法
                                 if (psiAnnotation == null) {
                                     if (psiMethod != null) {
                                         String methodName = psiMethod.getName();
-                                        defaultKey.append(".").append(methodName.toLowerCase());
+                                        if (defaultKey.length() > 0) {
+                                            defaultKey.append(".");
+                                        }
+                                        defaultKey.append(methodName.toLowerCase());
                                     }
                                 }
 
@@ -127,7 +135,10 @@ public class I18nReplacer extends AnAction {
                                     }
                                 }
                                 if (StringUtils.isNotBlank(annotationName)) {
-                                    defaultKey.append(".").append(annotationName);
+                                    if (defaultKey.length() > 0) {
+                                        defaultKey.append(".");
+                                    }
+                                    defaultKey.append(annotationName);
                                 }
                             }
                             String newKey = Messages.showInputDialog(project, "Please input new key, eg:common.name", "", Messages.getQuestionIcon(), defaultKey.toString(), new InputValidator() {
