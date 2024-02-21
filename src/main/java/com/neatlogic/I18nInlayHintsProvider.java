@@ -7,6 +7,7 @@ import com.intellij.lang.java.JavaLanguage;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiLiteralExpression;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nls;
@@ -52,10 +53,16 @@ public class I18nInlayHintsProvider implements InlayHintsProvider<NoSettings> {
     @Nullable
     @Override
     public InlayHintsCollector getCollectorFor(@NotNull PsiFile psiFile, @NotNull Editor editor, @NotNull NoSettings noSettings, @NotNull InlayHintsSink inlayHintsSink) {
+        final int[] count = {0};
         return new FactoryInlayHintsCollector(editor) {
+
             @Override
             public boolean collect(@NotNull PsiElement psiElement, @NotNull Editor editor, @NotNull InlayHintsSink inlayHintsSink) {
-                return processElement(psiElement, editor, inlayHintsSink, getFactory());
+                if (count[0] == 0) {
+                    count[0] += 1;
+                    return processElement(psiFile, editor, inlayHintsSink, getFactory());
+                }
+                return false;
             }
         };
     }
@@ -79,29 +86,7 @@ public class I18nInlayHintsProvider implements InlayHintsProvider<NoSettings> {
                     }
                 }
             }
-        } /*else if (element instanceof PsiMethodCallExpression) {
-            //处理$.t函数的变量
-            PsiMethodCallExpression methodCall = (PsiMethodCallExpression) element;
-            PsiReferenceExpressionImpl methodExpression = (PsiReferenceExpressionImpl) methodCall.getMethodExpression();
-            if ("$.t".equals(methodExpression.getText())) {
-                PsiLiteralExpression argument = (PsiLiteralExpression) methodCall.getArgumentList().getExpressions()[0];
-                if (argument.getValue() != null && StringUtils.isNotBlank(argument.getValue().toString())) {
-                    String value = argument.getValue().toString();
-                    I18nConfig config = I18nConfigFactory.getInstance(element.getProject());
-                    String path = config.getPath(config.getCurrentLang());
-                    if (StringUtils.isNotBlank(path)) {
-                        try {
-                            String result = Utils.findValueByKey(path, value);
-                            if (StringUtils.isNotBlank(result)) {
-                                inlayHintsSink.addInlineElement(argument.getTextRange().getEndOffset(), true, presentFactory.roundWithBackground(presentFactory.text(result)));
-                            }
-                        } catch (Exception ex) {
-
-                        }
-                    }
-                }
-            }
-        }*/
+        }
         // recursively process child elements
         for (PsiElement child : element.getChildren()) {
             if (processElement(child, editor, inlayHintsSink, presentFactory)) {
